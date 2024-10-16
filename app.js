@@ -65,7 +65,6 @@ document.getElementById("startAuth").addEventListener("click", async () => {
 
     } catch (error) {
         console.error("Error:", error);
-        alert(`Error: ${error.message}`);
     }
 });
 
