@@ -2,7 +2,7 @@ document.getElementById("startAuth").addEventListener("click", async () => {
     const clientId = "NgBBKBdswHZqlUVaBtF1gjSJlFyCyeHT";  // Your Client ID
     const deviceCodeUrl = "https://auth.isranicloud.com/oauth/device/code";
     const tokenUrl = "https://auth.isranicloud.com/oauth/token";
-    const audience = "MwoCvqJrJdgBAqONf6JIEZZeTZ9KbfF3"; // Your audience
+    const audience = "ipa.isranicloud.com"; // Your audience
 
     try {
         // Step 1: Request the Device Code
