@@ -24,30 +24,36 @@ document.getElementById("startAuth").addEventListener("click", async () => {
         });
 
         // Step 2: Poll for the token
-        const poll = setInterval(async () => {
-            let tokenResponse = await fetch(tokenUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=${data.device_code}&client_id=${clientId}`
-            });
-            let tokenData = await tokenResponse.json();
+        try {
+            // Your code for fetching the device code and starting the poll
+            const poll = setInterval(async () => {
+                let tokenResponse = await fetch(tokenUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=${data.device_code}&client_id=${clientId}`
+                });
+                let tokenData = await tokenResponse.json();
         
-            if (tokenData.access_token) {
-                clearInterval(poll);
-                document.getElementById("qrCodeContainer").style.display = "none";
-                document.getElementById("resultContainer").style.display = "block";
-                document.getElementById("username").textContent = tokenData.user_name;
-                document.getElementById("authTime").textContent = new Date().toLocaleString();
-            } else if (tokenData.error === "expired_token" || tokenData.error === "invalid_grant") {
-                clearInterval(poll);
-                alert("The device code has expired. Please restart the authorization process.");
-            } else if (tokenData.error) {
-                console.error("Error:", tokenData.error_description || tokenData.error);
-                alert(`Error: ${tokenData.error_description || tokenData.error}`);
-            }
-        }, interval);
+                if (tokenData.access_token) {
+                    clearInterval(poll);
+                    document.getElementById("qrCodeContainer").style.display = "none";
+                    document.getElementById("resultContainer").style.display = "block";
+                    document.getElementById("username").textContent = tokenData.user_name;
+                    document.getElementById("authTime").textContent = new Date().toLocaleString();
+                } else if (tokenData.error === "expired_token" || tokenData.error === "invalid_grant") {
+                    clearInterval(poll);
+                    alert("The device code has expired. Please restart the authorization process.");
+                } else if (tokenData.error) {
+                    console.error("Error:", tokenData.error_description || tokenData.error);
+                    alert(`Error: ${tokenData.error_description || tokenData.error}`);
+                }
+            }, interval);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
         // Do nothing, continue polling.
     } else {
         // Stop polling and handle errors.
