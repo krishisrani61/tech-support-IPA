@@ -11,7 +11,7 @@ document.getElementById("startAuth").addEventListener("click", async () => {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `client_id=${clientId}&scope=openid profile&audience=${audience}`
+            body: `client_id=${clientId}&scope=openid profile email&audience=${audience}`
         });
 
         if (!response.ok) {
@@ -49,9 +49,19 @@ document.getElementById("startAuth").addEventListener("click", async () => {
                 document.getElementById("qrCodeContainer").style.display = "none";
                 document.getElementById("resultContainer").style.display = "block";
 
-                // Display the full response data
-                document.getElementById("username").textContent = JSON.stringify(tokenData, null, 2);
-                document.getElementById("authTime").textContent = new Date().toLocaleString();
+                // Extract user-specific data and display it
+                const userInfo = {
+                    Username: tokenData.user_name || "N/A",
+                    Email: tokenData.email || "N/A",
+                    Expiry: tokenData.expires_in ? `${tokenData.expires_in} seconds` : "N/A",
+                    TokenType: tokenData.token_type || "N/A"
+                };
+
+                document.getElementById("username").textContent = `Username: ${userInfo.Username}`;
+                document.getElementById("email").textContent = `Email: ${userInfo.Email}`;
+                document.getElementById("expiry").textContent = `Expires In: ${userInfo.Expiry}`;
+                document.getElementById("tokenType").textContent = `Token Type: ${userInfo.TokenType}`;
+                document.getElementById("authTime").textContent = `Authenticated At: ${new Date().toLocaleString()}`;
             } else {
                 handleTokenErrors(tokenData, poll);
             }
