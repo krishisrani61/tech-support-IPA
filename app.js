@@ -10,7 +10,7 @@ document.getElementById("startAuth").addEventListener("click", async () => {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `client_id=${clientId}&scope=openid profile&audience=ipa.isranicloud.com`
+            body: `client_id=${clientId}&scope=openid profile&audience=MwoCvqJrJdgBAqONf6JIEZZeTZ9KbfF3`
         });
         let data = await response.json();
 
