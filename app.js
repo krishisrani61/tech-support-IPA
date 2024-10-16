@@ -4,6 +4,7 @@ document.getElementById("startAuth").addEventListener("click", async () => {
     const tokenUrl = "https://auth.isranicloud.com/oauth/token";
     const audience = "https://ipa.isranicloud.com"; // Your audience
 
+
     try {
         // Step 1: Request the Device Code
         const response = await fetch(deviceCodeUrl, {
@@ -49,18 +50,13 @@ document.getElementById("startAuth").addEventListener("click", async () => {
                 document.getElementById("qrCodeContainer").style.display = "none";
                 document.getElementById("resultContainer").style.display = "block";
 
-                // Extract user-specific data and display it
-                const userInfo = {
-                    Username: tokenData.user_name || "N/A",
-                    Email: tokenData.email || "N/A",
-                    Expiry: tokenData.expires_in ? `${tokenData.expires_in} seconds` : "N/A",
-                    TokenType: tokenData.token_type || "N/A"
-                };
+                // Decode the ID token to extract user-specific information
+                const decoded = jwt_decode(tokenData.id_token);
 
-                document.getElementById("username").textContent = `Username: ${userInfo.Username}`;
-                document.getElementById("email").textContent = `Email: ${userInfo.Email}`;
-                document.getElementById("expiry").textContent = `Expires In: ${userInfo.Expiry}`;
-                document.getElementById("tokenType").textContent = `Token Type: ${userInfo.TokenType}`;
+                // Display user-specific information
+                document.getElementById("username").textContent = `Username: ${decoded.name || "N/A"}`;
+                document.getElementById("email").textContent = `Email: ${decoded.email || "N/A"}`;
+                document.getElementById("picture").src = decoded.picture || "";
                 document.getElementById("authTime").textContent = `Authenticated At: ${new Date().toLocaleString()}`;
             } else {
                 handleTokenErrors(tokenData, poll);
