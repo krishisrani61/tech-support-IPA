@@ -76,7 +76,6 @@ function handleTokenErrors(tokenData, poll) {
             alert("The device code has expired. Please restart the authorization process.");
         } else {
             console.error("Token Error:", tokenData.error_description || tokenData.error);
-            alert(`Error: ${tokenData.error_description || tokenData.error}`);
         }
     }
 }
