@@ -31,8 +31,8 @@ document.getElementById("startAuth").addEventListener("click", async () => {
             if (error) console.error("QR Code generation error:", error);
         });
 
-        // Step 2: Poll for the token
-        const interval = data.interval * 1000; // Convert interval to milliseconds
+        // Step 2: Poll for the token every 5 seconds
+        const interval = 5000; // Set to 5 seconds
         const poll = setInterval(async () => {
             const tokenResponse = await fetch(tokenUrl, {
                 method: 'POST',
@@ -48,7 +48,9 @@ document.getElementById("startAuth").addEventListener("click", async () => {
                 clearInterval(poll);
                 document.getElementById("qrCodeContainer").style.display = "none";
                 document.getElementById("resultContainer").style.display = "block";
-                document.getElementById("username").textContent = tokenData.user_name || "User"; // Fallback to "User"
+
+                // Display the full response data
+                document.getElementById("username").textContent = JSON.stringify(tokenData, null, 2);
                 document.getElementById("authTime").textContent = new Date().toLocaleString();
             } else {
                 handleTokenErrors(tokenData, poll);
