@@ -24,25 +24,39 @@ document.getElementById("startAuth").addEventListener("click", async () => {
         });
 
         // Step 2: Poll for the token
-        const interval = data.interval * 1000;
-        const poll = setInterval(async () => {
-            let tokenResponse = await fetch(tokenUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=${data.device_code}&client_id=${clientId}`
-            });
-            let tokenData = await tokenResponse.json();
+const interval = data.interval * 1000;
+const poll = setInterval(async () => {
+    let tokenResponse = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=${data.device_code}&client_id=${clientId}`
+    });
+    let tokenData = await tokenResponse.json();
 
-            if (tokenData.access_token) {
-                clearInterval(poll);
-                document.getElementById("qrCodeContainer").style.display = "none";
-                document.getElementById("resultContainer").style.display = "block";
-                document.getElementById("username").textContent = tokenData.user_name;
-                document.getElementById("authTime").textContent = new Date().toLocaleString();
-            }
-        }, interval);
+    if (tokenData.access_token) {
+        clearInterval(poll);
+        document.getElementById("qrCodeContainer").style.display = "none";
+        document.getElementById("resultContainer").style.display = "block";
+        document.getElementById("username").textContent = tokenData.user_name;
+        document.getElementById("authTime").textContent = new Date().toLocaleString();
+    } else if (tokenData.error === "expired_token" || tokenData.error === "invalid_grant") {
+        clearInterval(poll);
+        alert("The device code has expired. Please restart the authorization process.");
+    } else {
+        clearInterval(poll);
+        console.error("Error:", tokenData.error_description || tokenData.error);
+        alert(`Error: ${tokenData.error_description || tokenData.error}`);
+    }
+        // Do nothing, continue polling.
+    } else {
+        // Stop polling and handle errors.
+        clearInterval(poll);
+        console.error("Error:", tokenData.error_description || tokenData.error);
+        alert(`Error: ${tokenData.error_description || tokenData.error}`);
+    }
+}, interval);
     } catch (error) {
         console.error("Error:", error);
     }
