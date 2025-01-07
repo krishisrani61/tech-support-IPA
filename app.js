@@ -68,6 +68,29 @@ document.getElementById("startAuth").addEventListener("click", async () => {
     }
 });
 
+// Helper function to convert characters to phonetic alphabet with dashes
+function toPhoneticAlphabet(code) {
+    const phoneticMap = {
+        A: "Alpha", B: "Bravo", C: "Charlie", D: "Delta", E: "Echo", 
+        F: "Foxtrot", G: "Golf", H: "Hotel", I: "India", J: "Juliett", 
+        K: "Kilo", L: "Lima", M: "Mike", N: "November", O: "Oscar", 
+        P: "Papa", Q: "Quebec", R: "Romeo", S: "Sierra", T: "Tango", 
+        U: "Uniform", V: "Victor", W: "Whiskey", X: "X-ray", 
+        Y: "Yankee", Z: "Zulu", 
+        0: "Zero", 1: "One", 2: "Two", 3: "Three", 4: "Four", 
+        5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"
+    };
+
+    return code.toUpperCase().split("").map(char => phoneticMap[char] || char).join(" - ");
+}
+
+// Show QR Code and User Code with Phonetic Alphabet
+document.getElementById("qrCodeContainer").style.display = "block";
+const phoneticCode = toPhoneticAlphabet(data.user_code);
+document.getElementById("userCode").textContent = phoneticCode;
+document.getElementById("verificationUri").textContent = data.verification_uri;
+
+
 // Function to handle token errors
 function handleTokenErrors(tokenData, poll) {
     if (tokenData.error) {
