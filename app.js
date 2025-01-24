@@ -17,7 +17,8 @@ document.getElementById("startAuth").addEventListener("click", async () => {
             5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"
         };
 
-        return code.toUpperCase().split("").map(char => phoneticMap[char] || char).join(" - ");
+        const phoneticCode = code.toUpperCase().split("").map(char => phoneticMap[char] || char).join(" - ");
+        return `${phoneticCode} (${code})`;
     }
 
     try {
